@@ -1,0 +1,5 @@
+$ pip install scrapy
+
+
+$ scrapy crawl to_crawl_list_spider
+$ scrapy crawl animal_spider
