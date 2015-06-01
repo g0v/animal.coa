@@ -81,23 +81,9 @@ class DownloadListSpider(scrapy.Spider):
                 to_crawl_announcement_list.remove(url)
                 break
 
-        # to_download_list_file = open(to_download_list_file_name, 'a+')
-        # downloaded_list_file = open(downloaded_list_file_name, 'r')
-
         # find download url and write to to_download_list if not present in downloaded_list
         for sel in response.xpath(u'//a[contains(text(), "收容公告")]/@href'):
             download_url = sel.extract()
             if download_url not in downloaded_list:
                 print(download_url)
                 to_download_list.append(download_url)
-
-            # if os.stat(downloaded_list_file_name).st_size == 0:
-            #     print >> to_download_list_file, download_url
-            # else:
-            #     f1 = mmap.mmap(to_download_list_file.fileno(), 0, access=mmap.ACCESS_READ)
-            #     f2 = mmap.mmap(downloaded_list_file.fileno(), 0, access=mmap.ACCESS_READ)
-            #     if f1.find(download_url)==-1 and f2.find(download_url)==-1:
-            #         print >> to_download_list_file, download_url
-
-        # to_download_list_file.close()
-        # downloaded_list_file.close()
