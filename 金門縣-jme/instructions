@@ -1,0 +1,12 @@
+$ pip install scrapy
+$ pip install xlrd
+
+# crawl all announcement page urls into "to_crawl_announcement_list"
+$ scrapy crawl announcement_list_spider
+
+# crawl all file urls into "to_download_list"
+$ scrapy crawl download_list_spider
+
+# download files from to_download_list
+# then process all downloaded files + transform to csv files
+$ python download_and_process.py
