@@ -8,15 +8,15 @@ error_reporting(E_ALL);
 	// define('DB_USER','root');
 	// define('DB_PWD','123456');
 	// define('DB_NAME','mydata');
-// 連接 sql
+// 連接 mysql
 	// $conn = mysql_connect(DB_HOST,DB_USER,DB_PWD) or die('mysql connected error cause: '.mysql_error());
-	// // 
+	// // 設置字符集
 	// mysql_select_db(DB_NAME) or die('db selected error cause: '.mysql_error());
 	// mysql_query('SET NAMES UTF8') or die('set names error cause: '.mysql_error());
-// 讀取 excel 
+// 創建一個讀取 excel 表單的實例
 $excelobj = new Spreadsheet_Excel_Reader();
 $excelobj->setOutputEncoding('UTF-8');
-// 載入檔案
+// 載入要讀取的檔案
 $excelobj->read('1040529.xls');  
 
 $fpw=fopen("1040529.csv","w");
@@ -35,7 +35,7 @@ for ($i = 1; $i <= $excelobj->sheets[0]['numRows']; $i++) {
 		  // if ($celldata == "")		// 跳到下一列
 				// $j = $excelobj->sheets[0]['numCols'];
 		  // else
-		  // {		// 取出內容後放 資料庫
+		  // {		// 取出內容後看是要顯示在螢幕還是放進 資料庫
 
 				// 直接螢幕列出結果
 				//echo "row=".$i.",col=".$j.",data=".$celldata;   // display on screen
@@ -57,3 +57,4 @@ fclose($fpw);
 
 
 ?>
+
