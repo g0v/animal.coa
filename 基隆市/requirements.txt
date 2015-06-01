@@ -1,0 +1,3 @@
+requests==2.7.0
+beautifulsoup4==4.3.2
+Twisted==15.2.1

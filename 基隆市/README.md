@@ -1,3 +1,11 @@
-# animal.coa
+# animal.coa - 基隆
 
-source code: https://github.com/hanksudo/crawlers/tree/master/animal.coa
+```bash
+pip install -r requirements.txt
+
+# normal version with Requests
+python crawler.py
+
+# concurrent version with Twisted
+python crawler-concurrent.py
+```
