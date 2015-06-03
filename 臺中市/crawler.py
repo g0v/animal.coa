@@ -34,5 +34,5 @@ for category, url in urls.items():
             img_path = '%s/%s.jpg' % (date, img_hash)
             cmd = 'wget -nc -O %s "%s"' % (img_path, img_url)
             subprocess.call(cmd, shell=True)
-            values.append('https://g0v.github.io/animal.coa/%E5%8F%B0%E4%B8%AD%E5%B8%82/{path}'.format(path=img_path))
+            values.append('https://g0v.github.io/animal.coa/%E8%87%BA%E4%B8%AD%E5%B8%82/{path}'.format(path=img_path))
             writer.writerow(values)
