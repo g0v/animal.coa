@@ -50,8 +50,8 @@ for ref in refs:
                 if ref['category'] == 'keep': # delete 公告照片僅供飼主辨識 column
                     del lines[2]
                 # unexpect newline with content within headers
-                line = []
                 if len(lines) > (len(ref['header'])-1):
+                    line = lines[:2]
                     for j in range(2, len(lines)):
                         if re.search(':', lines[j]):
                             line.append(lines[j])
