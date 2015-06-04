@@ -47,11 +47,18 @@ for ref in refs:
             stories = tree.css('td[align="left"][valign="top"]').xpath('a/parent::td')
             for story in stories:
                 lines = [x.strip() for x in story.xpath('.//text()').extract() if x.strip()]
+                if ref['category'] == 'keep': # delete 公告照片僅供飼主辨識 column
+                    del lines[2]
+                # unexpect newline with content within headers
+                line = []
+                if len(lines) > (len(ref['header'])-1):
+                    for j in range(2, len(lines)):
+                        if re.search(':', lines[j]):
+                            line.append(lines[j])
+                    lines = line
+                #
                 row = [re.sub('^.*?:', '', line).encode('utf-8') for line in lines]
-                # delete 公告照片僅供飼主辨識
-                if ref['category'] == 'keep':
-                    del row[2]
-                img_src = story.xpath('.//a/@href').extract()[0].encode('utf8')
+                img_src = story.xpath('.//img/@src').extract()[0].encode('utf8')
                 img_url = urljoin(ref['urls'][i], img_src)
                 img_hash = hashlib.sha1(img_src).hexdigest()
                 img_path = 'images/%s/%s.jpg' % (date, img_hash)
