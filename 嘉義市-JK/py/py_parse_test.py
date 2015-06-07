@@ -7,9 +7,10 @@ import csv
 class MyHTMLParser(HTMLParser):
     dict_tag = {'捕捉日期': 0, '捕捉地點': 1, '品種': 2, '性別': 3, '體型': 4, '捕捉來源': 5, '備註': 6, '晶片號碼': 7, '照片': 8}    
     each_animal_data=['無資料','無資料','無資料','無資料','無資料','無資料','無資料','無資料','無資料']   
-    inner_dataset=[]
+    inner_dataset=[each_animal_data,each_animal_data,each_animal_data,each_animal_data,each_animal_data,each_animal_data]
     row_data=""
     start_key = 0
+    i=1
     def handle_starttag(self, tag, attrs):
         if tag == "img" and attrs[0][1].split(r'/')[1]=='upload' and len(attrs[0][1].split(r'banner')) < 2:
             self.each_animal_data[self.dict_tag['照片']] = 'http://www.dog.dias.com.tw' + attrs[0][1]
@@ -17,17 +18,17 @@ class MyHTMLParser(HTMLParser):
         if len(data)==10 and data[4]=="-":
             self.each_animal_data[self.dict_tag['捕捉日期']] = data
         elif data[:5]=="捕捉地點：":
-            self.each_animal_data[self.dict_tag['捕捉地點']] = data
+            self.each_animal_data[self.dict_tag['捕捉地點']] = data[5:len(data)]
         elif data[:3]=="品種：": 
-            self.each_animal_data[self.dict_tag['品種']] = data
+            self.each_animal_data[self.dict_tag['品種']] = data[3:len(data)]
         elif data[:3]=="體型：": 
-            self.each_animal_data[self.dict_tag['體型']] = data
+            self.each_animal_data[self.dict_tag['體型']] = data[3:len(data)]
         elif data[:3]=="性別：": 
-            self.each_animal_data[self.dict_tag['性別']] = data
+            self.each_animal_data[self.dict_tag['性別']] = data[3:len(data)]
         elif data[:5]=="捕捉來源：": 
-            self.each_animal_data[self.dict_tag['性別']] = data
+            self.each_animal_data[self.dict_tag['性別']] = data[5:len(data)]
         elif data[:3]=="備註：": 
-            self.each_animal_data[self.dict_tag['備註']] = data
+            self.each_animal_data[self.dict_tag['備註']] = data[3:len(data)]
     def handle_data(self, data):
         if self.start_key == 1:
             self.parse_data(data)
@@ -39,26 +40,31 @@ class MyHTMLParser(HTMLParser):
             htmlBytes = response.read()
             htmlString = htmlBytes.decode("utf-8")
             self.feed(htmlString)
-            data_set.append(self.inner_dataset)
+            data_set.extend(self.inner_dataset)
     def handle_comment(self,data):
         if data==" content start ":
-            self.start_key= 0   
+            self.start_key= 0
+            for key,value in self.dict_tag.items():
+                self.each_animal_data[value]=key
+            self.inner_dataset[0]=self.each_animal_data
+            self.each_animal_data=['無資料','無資料','無資料','無資料','無資料','無資料','無資料','無資料','無資料']
         elif data==" box1 " and self.start_key==0:
             print(data,self.start_key)
             self.start_key=1
-        elif data==" box1 " and self.start_key==1:
+        elif data==" box1 " and self.start_key==1:           
             print(data,self.start_key)
-            self.inner_dataset.append([self.each_animal_data])
-            self.each_animal_data=['無資料','無資料','無資料','無資料','無資料','無資料','無資料','無資料','無資料'] 
+            self.inner_dataset[self.i]=self.each_animal_data
+            self.each_animal_data=['無資料','無資料','無資料','無資料','無資料','無資料','無資料','無資料','無資料']
+            self.i+=1
         elif data==" content end " and self.start_key==1:
             print(data,self.start_key)            
-            self.inner_dataset.append([self.each_animal_data])
+            self.inner_dataset[5]=self.each_animal_data
             self.start_key= 0
 aniset =[]
 parser = MyHTMLParser()
 parser.getLinks("http://www.dog.dias.com.tw/index.php?op=announcement&page=1",aniset)
 print(aniset)
 f = open("eggs.csv",'w',encoding='utf-8')  
-w = csv.writer(f)        
+w = csv.writer(f, delimiter=' ', quotechar='|')      
 w.writerows(aniset)
 f.close()
