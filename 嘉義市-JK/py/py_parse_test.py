@@ -65,7 +65,8 @@ f = open("eggs.csv",'w',encoding='utf-8')
 w = csv.writer(f, delimiter=',')      
 w.writerow(['捕捉日期', '捕捉地點', '品種', '性別', '體型', '捕捉來源', '備註', '晶片號碼', '照片'])
 f.close()
-for k in range(16):
+k = 1
+while k <= 16:
     aniset =[]
     parser = MyHTMLParser()
     parser.getLinks("http://www.dog.dias.com.tw/index.php?op=announcement&page="+str(k),aniset)
@@ -74,4 +75,5 @@ for k in range(16):
     w = csv.writer(f, delimiter=',')      
     w.writerows(aniset)   
     f.close()
-    time.sleep(2)
+    time.sleep(3)
+    k = k+1
