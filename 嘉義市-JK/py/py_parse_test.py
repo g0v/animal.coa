@@ -26,7 +26,7 @@ class MyHTMLParser(HTMLParser):
         elif data[:3]=="性別：": 
             self.each_animal_data[self.dict_tag['性別']] = data[3:len(data)]
         elif data[:5]=="捕捉來源：": 
-            self.each_animal_data[self.dict_tag['性別']] = data[5:len(data)]
+            self.each_animal_data[self.dict_tag['捕捉來源']] = data[5:len(data)]
         elif data[:3]=="備註：": 
             if "(晶片:" in data:
                 self.each_animal_data[self.dict_tag['晶片號碼']] = data.split(":")[1][0:-1]
