@@ -3,14 +3,15 @@ from html.parser import HTMLParser
 from urllib.request import urlopen  
 from urllib import parse
 import csv
+import time
 
 class MyHTMLParser(HTMLParser):
     dict_tag = {'捕捉日期': 0, '捕捉地點': 1, '品種': 2, '性別': 3, '體型': 4, '捕捉來源': 5, '備註': 6, '晶片號碼': 7, '照片': 8}    
     each_animal_data=['無資料','無資料','無資料','無資料','無資料','無資料','無資料','無資料','無資料']   
-    inner_dataset=[each_animal_data,each_animal_data,each_animal_data,each_animal_data,each_animal_data,each_animal_data]
+    inner_dataset=[each_animal_data,each_animal_data,each_animal_data,each_animal_data,each_animal_data]
     row_data=""
     start_key = 0
-    i=1
+    i=0
     def handle_starttag(self, tag, attrs):
         if tag == "img" and attrs[0][1].split(r'/')[1]=='upload' and len(attrs[0][1].split(r'banner')) < 2:
             self.each_animal_data[self.dict_tag['照片']] = 'http://www.dog.dias.com.tw' + attrs[0][1]
@@ -46,10 +47,7 @@ class MyHTMLParser(HTMLParser):
     def handle_comment(self,data):
         if data==" content start ":
             self.start_key= 0
-            #for key,value in self.dict_tag.items():
-                #self.each_animal_data[value]=key
-            #self.inner_dataset[0]=self.each_animal_data
-            #self.each_animal_data=['無資料','無資料','無資料','無資料','無資料','無資料','無資料','無資料','無資料']
+            self.i=0
         elif data==" box1 " and self.start_key==0:
             print(data,self.start_key)
             self.start_key=1
@@ -57,22 +55,23 @@ class MyHTMLParser(HTMLParser):
             print(data,self.start_key)
             self.inner_dataset[self.i]=self.each_animal_data
             self.each_animal_data=['無資料','無資料','無資料','無資料','無資料','無資料','無資料','無資料','無資料']
-            self.i+=1
+            self.i = self.i+1
         elif data==" content end " and self.start_key==1:
             print(data,self.start_key)            
-            self.inner_dataset[5]=self.each_animal_data
+            self.inner_dataset[4]=self.each_animal_data
+            self.each_animal_data=['無資料','無資料','無資料','無資料','無資料','無資料','無資料','無資料','無資料']
             self.start_key= 0
-
 f = open("eggs.csv",'w',encoding='utf-8')  
 w = csv.writer(f, delimiter=',')      
 w.writerow(['捕捉日期', '捕捉地點', '品種', '性別', '體型', '捕捉來源', '備註', '晶片號碼', '照片'])
 f.close()
-for i in range(7):
+for k in range(16):
     aniset =[]
     parser = MyHTMLParser()
-    parser.getLinks("http://www.dog.dias.com.tw/index.php?op=announcement&page="+str(i),aniset)
+    parser.getLinks("http://www.dog.dias.com.tw/index.php?op=announcement&page="+str(k),aniset)
     print(aniset)
     f = open("eggs.csv",'a',encoding='utf-8')  
     w = csv.writer(f, delimiter=',')      
-    w.writerows(aniset)
+    w.writerows(aniset)   
     f.close()
+    time.sleep(2)
